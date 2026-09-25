@@ -7,14 +7,8 @@ Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
-var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddCarter();
+builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddMidtrans((options) =>
 {
     options.ClientKey = Environment.GetEnvironmentVariable("MIDTRANS_CLIENT_KEY");
@@ -25,6 +19,12 @@ builder.Services.AddMidtrans((options) =>
         TimeoutInSeconds = 86400,
     };
 });
+
+var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
 
 app.MapCarter();
 app.Run();
